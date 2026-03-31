@@ -588,13 +588,21 @@ function renderReports(data) {
     data.forEach(emp => {
         bodyHtml += `<tr id="report-row-${emp['Employee ID']}">`;
         displayKeys.forEach(k => {
-            const val = emp[k] || '';
-            let cls = '';
+            let val = emp[k] || '';
             const lowerVal = val.toString().toLowerCase();
-            if (lowerVal === 'leave') cls = 'class="cell-leave"';
-            else if (lowerVal === 'na') cls = 'class="cell-na"';
-            else if (lowerVal === 'sunday') cls = 'class="cell-sunday"';
-            else if (HOLIDAYS.includes(k)) cls = 'class="cell-holiday"';
+            let cls = '';
+            
+            if (lowerVal === 'leave') {
+                cls = 'class="cell-leave"';
+            } else if (lowerVal === 'na') {
+                cls = 'class="cell-na"';
+            } else if (lowerVal === 'sunday') {
+                cls = 'class="cell-sunday"';
+                val = 'Sunday';
+            } else if (HOLIDAYS.includes(k)) {
+                cls = 'class="cell-holiday"';
+                val = 'Holiday';
+            }
             
             bodyHtml += `<td ${cls} data-status="${lowerVal}">${val}</td>`;
         });
