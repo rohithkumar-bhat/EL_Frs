@@ -673,14 +673,22 @@ td {
 #reports-table .cell-holiday {
     background: #dcfce7 !important; /* Soft Pastel Green */
     color: #166534;
-    font-weight: 600;
+    font-weight: 700;
+    width: 75px;
+    min-width: 75px;
+    text-align: center;
+    padding: 0.45rem 0.2rem !important;
 }
 
 #reports-table .cell-sunday {
     background: #f1f5f9 !important; /* Soft Grey */
     color: #64748b;
-    font-weight: 500;
+    font-weight: 600;
     opacity: 0.7;
+    width: 75px;
+    min-width: 75px;
+    text-align: center;
+    padding: 0.45rem 0.2rem !important;
 }
 
 @media (max-width: 1200px) {
