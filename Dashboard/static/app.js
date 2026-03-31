@@ -58,13 +58,10 @@ function getWorkingDaysDenominator(monthStr) {
 
 async function initDashboard() {
     try {
-        // Use global attendanceData from data.js
-        if (typeof attendanceData === 'undefined') {
-            throw new Error('Attendance data not found. Please check data.js.');
-        }
+        // use static data first
         allEmployees = attendanceData;
         
-        if (allEmployees.length === 0) throw new Error('No employee data found');
+        if (!allEmployees || allEmployees.length === 0) throw new Error('No employee data found');
 
         // 1. Identify all available months
         const dateKeys = Object.keys(allEmployees[0]).filter(key => /^\d{4}-\d{2}-\d{2}$/.test(key));
@@ -159,10 +156,13 @@ async function initDashboard() {
 
         // Remove Loader
         setTimeout(() => {
-            document.getElementById('loading-overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('loading-overlay').style.display = 'none';
-            }, 500);
+            const loader = document.getElementById('loading-overlay');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }
         }, 800);
     } catch (error) {
         console.error('Error initializing dashboard:', error);
@@ -616,10 +616,6 @@ function renderLeaveRoster(data) {
     roster.innerHTML = html;
 }
 
-
-
-
-
 /* ── Big Interactive Calendar ────────────────────────────────── */
 function renderBigCalendar(employees, year, month) {
     const grid = document.getElementById('big-cal-grid');
@@ -797,7 +793,7 @@ function openDayModal(dateKey, info, allEmployees) {
         const isNA = item.status === 'na';
         
         let badgeSpan = '';
-        if (isPresent) badgeSpan = `<span class="big-badge bb-present">Present</span>`;
+        if (isPresent) badgeSpan = `<span class="big-badge bb-present">${item.emp[dateKey] || 'Present'}</span>`;
         else if (isLeave) badgeSpan = `<span class="big-badge bb-leave">Leave</span>`;
         else if (isNA) badgeSpan = `<span class="big-badge bb-na">N/A</span>`;
 
@@ -828,18 +824,21 @@ function openDayModal(dateKey, info, allEmployees) {
                 statusCard.style.background = 'rgba(16, 185, 129, 0.1)';
                 statusCard.style.borderColor = 'rgba(16, 185, 129, 0.3)';
                 statusLabel.style.color = '#065f46';
+                statusLabel.textContent = 'Working Hours';
                 statusVal.style.color = '#10b981';
                 statusVal.textContent = String(rawStatus).toUpperCase();
             } else if (isLeave) {
                 statusCard.style.background = 'rgba(239, 68, 68, 0.1)';
                 statusCard.style.borderColor = 'rgba(239, 68, 68, 0.3)';
                 statusLabel.style.color = '#991b1b';
+                statusLabel.textContent = 'Status';
                 statusVal.style.color = '#ef4444';
                 statusVal.textContent = String(rawStatus).toUpperCase();
             } else if (isNA) {
                 statusCard.style.background = 'rgba(245, 158, 11, 0.1)';
                 statusCard.style.borderColor = 'rgba(245, 158, 11, 0.3)';
                 statusLabel.style.color = '#b45309';
+                statusLabel.textContent = 'Status';
                 statusVal.style.color = '#f59e0b';
                 statusVal.textContent = String(rawStatus).toUpperCase();
             }
