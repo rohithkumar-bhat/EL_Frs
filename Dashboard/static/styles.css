@@ -233,6 +233,18 @@ nav {
     padding: 0.6rem 1rem;
     border-radius: 12px;
     width: 300px;
+    cursor: pointer;
+}
+
+.search-bar svg {
+    width: 18px;
+    height: 18px;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.search-bar:hover svg {
+    color: var(--primary);
 }
 
 .search-bar input {
