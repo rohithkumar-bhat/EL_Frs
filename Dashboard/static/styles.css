@@ -51,6 +51,47 @@ body {
     background: var(--sidebar-dark);
     border-right: 1px solid #f1f5f9;
     color: var(--text-main);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+    padding: 2rem 1rem;
+}
+
+.sidebar-toggle-btn {
+    position: absolute;
+    top: 1rem;
+    right: -12px;
+    width: 24px;
+    height: 24px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+    z-index: 110;
+    transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-toggle-btn {
+    right: 50%;
+    transform: translateX(50%) rotate(180deg);
+}
+
+.sidebar-toggle-btn:hover {
+    transform: scale(1.1);
+    background: var(--primary-dark);
+}
+
+.sidebar-toggle-btn svg {
+    width: 14px;
+    height: 14px;
 }
 
 .logo {
@@ -74,6 +115,27 @@ nav {
     border-radius: 12px;
     margin-bottom: 0.5rem;
     transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.sidebar.collapsed .nav-item {
+    padding: 0.875rem;
+    justify-content: center;
+}
+
+.sidebar.collapsed .nav-item span, 
+.sidebar.collapsed .logo img,
+.sidebar.collapsed .user-info {
+    display: none;
+}
+
+.sidebar.collapsed .logo {
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.sidebar.collapsed .nav-item svg {
+    margin: 0;
 }
 
 .nav-item svg {
@@ -141,6 +203,11 @@ nav {
     margin-left: 260px;
     padding: 2rem;
     max-width: 1400px;
+    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar.collapsed ~ .content {
+    margin-left: 80px;
 }
 
 .dashboard-view {
@@ -563,7 +630,7 @@ td {
 
 /* Reports Table Density */
 #reports-table {
-    font-size: 0.85rem;
+    font-size: 0.775rem;
     border-collapse: collapse;
     width: 100%;
 }
@@ -573,9 +640,9 @@ td {
     color: var(--primary);
     font-weight: 700;
     text-transform: uppercase;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     letter-spacing: 0.05em;
-    padding: 1rem 0.75rem;
+    padding: 0.6rem 0.4rem;
     border: 1px solid #e2e8f0; /* Soft grid border */
     border-bottom: 2px solid var(--primary);
     position: sticky;
@@ -586,7 +653,7 @@ td {
 }
 
 #reports-table td {
-    padding: 0.75rem 0.5rem;
+    padding: 0.45rem 0.35rem;
     white-space: nowrap;
     border: 1px solid #e2e8f0; /* Soft grid border */
 }
