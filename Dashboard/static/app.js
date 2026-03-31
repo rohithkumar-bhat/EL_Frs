@@ -67,30 +67,52 @@ async function initDashboard() {
         const dateKeys = Object.keys(allEmployees[0]).filter(key => /^\d{4}-\d{2}-\d{2}$/.test(key));
         const uniqueMonths = [...new Set(dateKeys.map(d => d.substring(0, 7)))].sort().reverse();
         
-        // 2. Populate Month Selector
+        // 2. Populate Month Selectors
         const monthSelector = document.getElementById('month-selector');
-        monthSelector.innerHTML = '';
-        uniqueMonths.forEach(m => {
-            const opt = document.createElement('option');
-            opt.value = m;
-            const [y, mm] = m.split('-');
-            const date = new Date(y, parseInt(mm) - 1, 1);
-            opt.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-            monthSelector.appendChild(opt);
+        const reportsMonthSelector = document.getElementById('reports-month-selector');
+        
+        [monthSelector, reportsMonthSelector].forEach(sel => {
+            if (!sel) return;
+            sel.innerHTML = '';
+            uniqueMonths.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                const [y, mm] = m.split('-');
+                const date = new Date(y, parseInt(mm) - 1, 1);
+                opt.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                sel.appendChild(opt);
+            });
         });
 
         // Set default month (latest)
         currentMonth = uniqueMonths[0];
-        monthSelector.value = currentMonth;
+        if (monthSelector) monthSelector.value = currentMonth;
+        if (reportsMonthSelector) reportsMonthSelector.value = currentMonth;
 
         // 3. Initial Render
         updateDashboardView();
 
-        // 4. Setup Month Change Listener
-        monthSelector.addEventListener('change', (e) => {
+        // 4. Setup Month Change Listeners
+        const syncSelectors = (e) => {
             currentMonth = e.target.value;
+            if (monthSelector) monthSelector.value = currentMonth;
+            if (reportsMonthSelector) reportsMonthSelector.value = currentMonth;
             updateDashboardView();
-        });
+        };
+
+        if (monthSelector) monthSelector.addEventListener('change', syncSelectors);
+        if (reportsMonthSelector) reportsMonthSelector.addEventListener('change', syncSelectors);
+
+        // 5. Setup Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        if (sidebar && sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                // Optional: Trigger window resize to fix charts if needed
+                setTimeout(() => window.dispatchEvent(new Event('resize')), 450);
+            });
+        }
 
         // 5. Setup Navigation
         setupNavigation(allEmployees);
@@ -122,6 +144,14 @@ async function initDashboard() {
         searchInput.addEventListener('input', filterHandler);
         departmentFilter.addEventListener('change', filterHandler);
         attendanceFilter.addEventListener('change', filterHandler);
+        
+        // Setup Search Icon Click
+        const searchIcon = document.getElementById('search-icon');
+        if (searchIcon) {
+            searchIcon.addEventListener('click', () => {
+                searchInput.focus();
+            });
+        }
         
         // 7. Setup Reports CSV Download
         document.getElementById('btn-download-csv').addEventListener('click', () => {
